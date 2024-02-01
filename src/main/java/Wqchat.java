@@ -1,11 +1,11 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 public class Wqchat {
     public static void printLine() {
         System.out.println("____________________________________________________________");
     }
     public static void main(String[] args) {
-        String[] tasks = new String[100];
-        int taskCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
 
         printLine();
         System.out.println("Hello! I'm Wqchat");
@@ -17,25 +17,46 @@ public class Wqchat {
         line = in.nextLine();
 
         while (!line.equals("bye")) {
-            if (!line.equals("list")) {
+            if (line.equals("list")) {
+                printLine();
+                System.out.println("Here are the tasks in your list: ");
+                for (int i = 0; i < tasks.size(); i++) {
+                    Task task = tasks.get(i);
+                    System.out.print(i + 1);
+                    System.out.print(task.isDone() ? ".[X] " : ".[ ] ");
+                    System.out.println(task.getDescription());
+                }
+                printLine();
+            } else if (line.startsWith("mark")) {
+                String[] words = line.split(" ");
+                int index = Integer.parseInt(words[1]);
+                Task task = tasks.get(index - 1);
+                task.markAsDone();
+
+                printLine();
+                System.out.println("Nice! I've marked this task as done:");
+                System.out.print("[X] ");
+                System.out.println(task.getDescription());
+                printLine();
+            } else if (line.startsWith("unmark")) {
+                String[] words = line.split(" ");
+                int index = Integer.parseInt(words[1]);
+                Task task = tasks.get(index - 1);
+                task.markAsNotDone();
+
+                printLine();
+                System.out.println("OK, I've marked this task as not done yet:");
+                System.out.print("[ ] ");
+                System.out.println(task.getDescription());
+                printLine();
+            } else {
                 printLine();
                 System.out.println("added: " + line);
                 printLine();
 
-                tasks[taskCount] = line;
-                taskCount++;
-            } else {
-                printLine();
-                for (int i = 0; i < 100; i++) {
-                    if (tasks[i] != null) {
-                        System.out.print(i + 1);
-                        System.out.println(". " + tasks[i]);
-                    }
-                }
-                printLine();
-
+                Task newTask = new Task(line);
+                tasks.add(newTask);
             }
-
             line = in.nextLine();
         }
 
