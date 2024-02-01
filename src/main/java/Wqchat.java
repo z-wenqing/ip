@@ -5,7 +5,7 @@ public class Wqchat {
         System.out.println("____________________________________________________________");
     }
     public static void main(String[] args) {
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks = new ArrayList<>(); // a list of tasks
 
         printLine();
         System.out.println("Hello! I'm Wqchat");
