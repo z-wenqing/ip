@@ -68,6 +68,24 @@ public class Wqchat {
                 printTaskCount();
                 printLine();
                 taskCount++;
+            } else if (line.startsWith("deadline")) {
+                if (line.contains("/by")) {
+                    int indexOfSlash = line.indexOf("/");
+                    int indexOfBy = indexOfSlash + 4;
+                    String description = line.substring(9, indexOfSlash);
+                    String by = line.substring(indexOfBy);
+                    tasks[taskCount] = new Deadline(description, by);
+
+                    printLine();
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println(tasks[taskCount]);
+                    printTaskCount();
+                    printLine();
+                    taskCount++;
+                } else {
+                    System.out.println("I'm sorry I can only understand if you talk to me in the following way: ");
+                    System.out.println("deadline [task] /by [time]");
+                }
             }
             line = in.nextLine();
         }
