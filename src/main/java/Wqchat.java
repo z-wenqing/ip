@@ -4,8 +4,20 @@ public class Wqchat {
     public static void printLine() {
         System.out.println("____________________________________________________________");
     }
+
+    public static void printTaskCount() {
+        if (taskCount == 0) {
+            System.out.println("Now you have 1 task in the list.");
+        } else {
+            int count = taskCount + 1;
+            System.out.println("Now you have " + count + " tasks in the list");
+        }
+    }
+    protected static int taskCount = 0;
     public static void main(String[] args) {
-        ArrayList<Task> tasks = new ArrayList<>(); // a list of tasks
+        /*ArrayList<Task> tasks = new ArrayList<>(); // a list of tasks*/
+        Task[] tasks = new Task[100];
+
 
         printLine();
         System.out.println("Hello! I'm Wqchat");
@@ -20,42 +32,42 @@ public class Wqchat {
             if (line.equals("list")) {
                 printLine();
                 System.out.println("Here are the tasks in your list: ");
-                for (int i = 0; i < tasks.size(); i++) {
-                    Task task = tasks.get(i);
+                for (int i = 0; i < taskCount; i++) {
                     System.out.print(i + 1);
-                    System.out.print(task.isDone() ? ".[X] " : ".[ ] ");
-                    System.out.println(task.getDescription());
+                    System.out.print(".");
+                    System.out.println(tasks[i].toString());
                 }
                 printLine();
             } else if (line.startsWith("mark")) {
                 String[] words = line.split(" ");
-                int index = Integer.parseInt(words[1]);
-                Task task = tasks.get(index - 1);
-                task.markAsDone();
+                int index = Integer.parseInt(words[1]) - 1;
+                tasks[index].markAsDone();
 
                 printLine();
                 System.out.println("Nice! I've marked this task as done:");
                 System.out.print("[X] ");
-                System.out.println(task.getDescription());
+                System.out.println(tasks[index].getDescription());
                 printLine();
             } else if (line.startsWith("unmark")) {
                 String[] words = line.split(" ");
-                int index = Integer.parseInt(words[1]);
-                Task task = tasks.get(index - 1);
-                task.markAsNotDone();
+                int index = Integer.parseInt(words[1]) - 1;
+                tasks[index].markAsNotDone();
 
                 printLine();
                 System.out.println("OK, I've marked this task as not done yet:");
                 System.out.print("[ ] ");
-                System.out.println(task.getDescription());
+                System.out.println(tasks[index].getDescription());
                 printLine();
-            } else {
-                printLine();
-                System.out.println("added: " + line);
-                printLine();
+            } else if (line.startsWith("todo")) {
+                String description = line.substring(5);
+                tasks[taskCount] = new Todo(description);
 
-                Task newTask = new Task(line);
-                tasks.add(newTask);
+                printLine();
+                System.out.println("Got it. I've added this task:");
+                System.out.println(tasks[taskCount]);
+                printTaskCount();
+                printLine();
+                taskCount++;
             }
             line = in.nextLine();
         }
