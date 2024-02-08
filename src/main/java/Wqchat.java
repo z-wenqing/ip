@@ -86,6 +86,22 @@ public class Wqchat {
                     System.out.println("I'm sorry I can only understand if you talk to me in the following way: ");
                     System.out.println("deadline [task] /by [time]");
                 }
+            } else if (line.startsWith("event")) {
+                if (line.contains("/from") && line.contains("/to")) {
+                    int indexOfFrom = line.indexOf("/from") + 6;
+                    int indexOfTo = line.indexOf("/to") + 4;
+                    String description = line.substring(6, line.indexOf("/from"));
+                    String from = line.substring(indexOfFrom, line.indexOf("/to") - 1);
+                    String to = line.substring(indexOfTo);
+                    tasks[taskCount] = new Event(description, from, to);
+
+                    printLine();
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println(tasks[taskCount]);
+                    printTaskCount();
+                    printLine();
+                    taskCount++;
+                }
             }
             line = in.nextLine();
         }
