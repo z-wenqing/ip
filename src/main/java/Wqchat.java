@@ -1,17 +1,43 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 public class Wqchat {
-    public static void printLine() {
+    private static Task[] tasks = new Task[100];
+    private static void printLine() {
         System.out.println("____________________________________________________________");
     }
 
-    public static void printTaskCount() {
+    private static void printTaskCount() {
         if (taskCount == 0) {
             System.out.println("Now you have 1 task in the list.");
         } else {
             int count = taskCount + 1;
             System.out.println("Now you have " + count + " tasks in the list");
         }
+    }
+    private static void printGreetings() {
+        printLine();
+        System.out.println("Hello! I'm Wqchat");
+        System.out.println("What can I do for you?");
+        printLine();
+    }
+    private static void printList() {
+        printLine();
+        System.out.println("Here are the tasks in your list: ");
+        for (int i = 0; i < taskCount; i++) {
+            System.out.print(i + 1);
+            System.out.print(".");
+            System.out.println(tasks[i].toString());
+        }
+        printLine();
+    }
+
+    private static void printAddedTask() {
+        printLine();
+        System.out.println("Got it. I've added this task:");
+        System.out.println(tasks[taskCount]);
+        printTaskCount();
+        printLine();
+        taskCount++;
     }
     protected static int taskCount = 0;
     private static final int EVENT_DESCRIPTION_INDEX = 6;
@@ -21,13 +47,9 @@ public class Wqchat {
     private static final int TODO_DESCRIPTION_INDEX = 5;
     public static void main(String[] args) {
         /*ArrayList<Task> tasks = new ArrayList<>(); // a list of tasks*/
-        Task[] tasks = new Task[100];
 
 
-        printLine();
-        System.out.println("Hello! I'm Wqchat");
-        System.out.println("What can I do for you?");
-        printLine();
+        printGreetings();
 
         String line;
         Scanner in = new Scanner(System.in);
@@ -35,14 +57,7 @@ public class Wqchat {
 
         while (!line.equals("bye")) {
             if (line.equals("list")) {
-                printLine();
-                System.out.println("Here are the tasks in your list: ");
-                for (int i = 0; i < taskCount; i++) {
-                    System.out.print(i + 1);
-                    System.out.print(".");
-                    System.out.println(tasks[i].toString());
-                }
-                printLine();
+                printList();
             } else if (line.startsWith("mark")) {
                 String[] words = line.split(" ");
                 int index = Integer.parseInt(words[1]) - 1;
@@ -67,12 +82,7 @@ public class Wqchat {
                 String description = line.substring(TODO_DESCRIPTION_INDEX);
                 tasks[taskCount] = new Todo(description);
 
-                printLine();
-                System.out.println("Got it. I've added this task:");
-                System.out.println(tasks[taskCount]);
-                printTaskCount();
-                printLine();
-                taskCount++;
+                printAddedTask();
             } else if (line.startsWith("deadline")) {
                 if (line.contains("/by")) {
                     int indexOfSlash = line.indexOf("/");
@@ -81,12 +91,7 @@ public class Wqchat {
                     String by = line.substring(indexOfBy);
                     tasks[taskCount] = new Deadline(description, by);
 
-                    printLine();
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println(tasks[taskCount]);
-                    printTaskCount();
-                    printLine();
-                    taskCount++;
+                    printAddedTask();
                 } else {
                     System.out.println("I'm sorry I can only understand if you talk to me in the following way: ");
                     System.out.println("deadline [task] /by [time]");
@@ -100,12 +105,7 @@ public class Wqchat {
                     String to = line.substring(indexOfTo);
                     tasks[taskCount] = new Event(description, from, to);
 
-                    printLine();
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println(tasks[taskCount]);
-                    printTaskCount();
-                    printLine();
-                    taskCount++;
+                    printAddedTask();
                 }
             }
             line = in.nextLine();
