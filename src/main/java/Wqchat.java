@@ -14,6 +14,11 @@ public class Wqchat {
         }
     }
     protected static int taskCount = 0;
+    private static final int EVENT_DESCRIPTION_INDEX = 6;
+    private static final int EVENT_TO_INDEX_INCREMENT = 4;
+    private static final int DEADLINE_DESCRIPTION_INDEX = 9;
+    private static final int DEADLINE_BY_INDEX_INCREMENT = 4;
+    private static final int TODO_DESCRIPTION_INDEX = 5;
     public static void main(String[] args) {
         /*ArrayList<Task> tasks = new ArrayList<>(); // a list of tasks*/
         Task[] tasks = new Task[100];
@@ -59,7 +64,7 @@ public class Wqchat {
                 System.out.println(tasks[index].getDescription());
                 printLine();
             } else if (line.startsWith("todo")) {
-                String description = line.substring(5);
+                String description = line.substring(TODO_DESCRIPTION_INDEX);
                 tasks[taskCount] = new Todo(description);
 
                 printLine();
@@ -71,8 +76,8 @@ public class Wqchat {
             } else if (line.startsWith("deadline")) {
                 if (line.contains("/by")) {
                     int indexOfSlash = line.indexOf("/");
-                    int indexOfBy = indexOfSlash + 4;
-                    String description = line.substring(9, indexOfSlash);
+                    int indexOfBy = indexOfSlash + DEADLINE_BY_INDEX_INCREMENT;
+                    String description = line.substring(DEADLINE_DESCRIPTION_INDEX, indexOfSlash);
                     String by = line.substring(indexOfBy);
                     tasks[taskCount] = new Deadline(description, by);
 
@@ -88,10 +93,10 @@ public class Wqchat {
                 }
             } else if (line.startsWith("event")) {
                 if (line.contains("/from") && line.contains("/to")) {
-                    int indexOfFrom = line.indexOf("/from") + 6;
-                    int indexOfTo = line.indexOf("/to") + 4;
-                    String description = line.substring(6, line.indexOf("/from"));
-                    String from = line.substring(indexOfFrom, line.indexOf("/to") - 1);
+                    int indexOfFrom = line.indexOf("/from") + EVENT_DESCRIPTION_INDEX;
+                    int indexOfTo = line.indexOf("/to") + EVENT_TO_INDEX_INCREMENT;
+                    String description = line.substring(EVENT_DESCRIPTION_INDEX, line.indexOf("/from"));
+                    String from = line.substring(indexOfFrom, line.indexOf("/to") - 1); // -1 to exclude the space
                     String to = line.substring(indexOfTo);
                     tasks[taskCount] = new Event(description, from, to);
 
