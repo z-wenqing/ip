@@ -112,7 +112,9 @@ public class Wqchat {
 
                     printAddedTask();
                 }
-            } 
+            } else {
+                System.out.println("Sorry I don't understand :(");
+            }
             line = in.nextLine();
         }
 
