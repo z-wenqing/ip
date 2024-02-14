@@ -38,7 +38,9 @@ public class Wqchat {
         printTaskCount();
         printLine();
         taskCount++;
+
     }
+
     protected static int taskCount = 0;
     private static final int EVENT_DESCRIPTION_INDEX = 6;
     private static final int EVENT_TO_INDEX_INCREMENT = 4;
@@ -79,10 +81,13 @@ public class Wqchat {
                 System.out.println(tasks[index].getDescription());
                 printLine();
             } else if (line.startsWith("todo")) {
-                String description = line.substring(TODO_DESCRIPTION_INDEX);
-                tasks[taskCount] = new Todo(description);
-
-                printAddedTask();
+                try {
+                    String description = line.substring(TODO_DESCRIPTION_INDEX).trim();
+                    tasks[taskCount] = new Todo(description);
+                    printAddedTask();
+                } catch (StringIndexOutOfBoundsException e){
+                    System.out.println("You never say what you want to do...");
+                }
             } else if (line.startsWith("deadline")) {
                 if (line.contains("/by")) {
                     int indexOfSlash = line.indexOf("/");
@@ -93,7 +98,7 @@ public class Wqchat {
 
                     printAddedTask();
                 } else {
-                    System.out.println("I'm sorry I can only understand if you talk to me in the following way: ");
+                    System.out.println("Invalid command. If you want to add a deadline, you can type: ");
                     System.out.println("deadline [task] /by [time]");
                 }
             } else if (line.startsWith("event")) {
@@ -107,7 +112,7 @@ public class Wqchat {
 
                     printAddedTask();
                 }
-            }
+            } 
             line = in.nextLine();
         }
 
