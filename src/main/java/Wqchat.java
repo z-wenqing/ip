@@ -95,6 +95,13 @@ public class Wqchat {
     public static class NegativeIndexException extends Exception {
 
     }
+    public static class MissingDueTime extends Exception {
+
+    }
+
+    public static class MissingInformation extends Exception {
+
+    }
 
     protected static int taskCount = 0;
     private static final int EVENT_DESCRIPTION_INDEX = 6;
@@ -102,10 +109,7 @@ public class Wqchat {
     private static final int DEADLINE_DESCRIPTION_INDEX = 9;
     private static final int DEADLINE_BY_INDEX_INCREMENT = 4;
     private static final int TODO_DESCRIPTION_INDEX = 5;
-    public static void main(String[] args) throws InvalidIndexException {
-        /*ArrayList<Task> tasks = new ArrayList<>(); // a list of tasks*/
-
-
+    public static void main(String[] args) throws InvalidIndexException, MissingDueTime, MissingInformation {
         printGreetings();
 
         String line;
@@ -150,17 +154,21 @@ public class Wqchat {
                     System.out.println("You never say what you want to do...");
                 }
             } else if (line.startsWith("deadline")) {
-                if (line.contains("/by")) {
-                    int indexOfSlash = line.indexOf("/");
+                try {
+                    int indexOfSlash = line.indexOf("/by");
+                    if (indexOfSlash == -1) {
+                        throw new MissingInformation();
+                    }
+
+                    String description = line.substring(DEADLINE_DESCRIPTION_INDEX, indexOfSlash).trim();
                     int indexOfBy = indexOfSlash + DEADLINE_BY_INDEX_INCREMENT;
-                    String description = line.substring(DEADLINE_DESCRIPTION_INDEX, indexOfSlash);
-                    String by = line.substring(indexOfBy);
+                    String by = line.substring(indexOfBy).trim();
                     tasks[taskCount] = new Deadline(description, by);
 
                     printAddedTask();
-                } else {
-                    System.out.println("Invalid command. If you want to add a deadline, you can type: ");
-                    System.out.println("deadline [task] /by [time]");
+                } catch (MissingInformation e) {
+                    System.out.println("Missing information.");
+                    System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
                 }
             } else if (line.startsWith("event")) {
                 if (line.contains("/from") && line.contains("/to")) {
