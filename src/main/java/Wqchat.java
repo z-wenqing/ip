@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.stream.StreamSupport;
+
 public class Wqchat {
     public static class NoTaskException extends Exception {
 
@@ -95,11 +97,10 @@ public class Wqchat {
     public static class NegativeIndexException extends Exception {
 
     }
-    public static class MissingDueTime extends Exception {
+    public static class MissingDueTimeException extends Exception {
 
     }
-
-    public static class MissingInformation extends Exception {
+    public static class MissingDescriptionException extends Exception {
 
     }
 
@@ -109,7 +110,7 @@ public class Wqchat {
     private static final int DEADLINE_DESCRIPTION_INDEX = 9;
     private static final int DEADLINE_BY_INDEX_INCREMENT = 4;
     private static final int TODO_DESCRIPTION_INDEX = 5;
-    public static void main(String[] args) throws InvalidIndexException, MissingDueTime, MissingInformation {
+    public static void main(String[] args) throws InvalidIndexException, MissingDueTimeException {
         printGreetings();
 
         String line;
@@ -147,27 +148,20 @@ public class Wqchat {
 
             } else if (line.startsWith("todo")) {
                 try {
-                    String description = line.substring(TODO_DESCRIPTION_INDEX).trim();
-                    tasks[taskCount] = new Todo(description);
+                    addTodo(line);
                     printAddedTask();
                 } catch (StringIndexOutOfBoundsException e){
                     System.out.println("You never say what you want to do...");
                 }
             } else if (line.startsWith("deadline")) {
                 try {
-                    int indexOfSlash = line.indexOf("/by");
-                    if (indexOfSlash == -1) {
-                        throw new MissingInformation();
-                    }
-
-                    String description = line.substring(DEADLINE_DESCRIPTION_INDEX, indexOfSlash).trim();
-                    int indexOfBy = indexOfSlash + DEADLINE_BY_INDEX_INCREMENT;
-                    String by = line.substring(indexOfBy).trim();
-                    tasks[taskCount] = new Deadline(description, by);
-
+                    addDeadline(line);
                     printAddedTask();
-                } catch (MissingInformation e) {
-                    System.out.println("Missing information.");
+                } catch (MissingDueTimeException e) {
+                    System.out.println("When is it due?");
+                    System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
+                } catch (MissingDescriptionException e) {
+                    System.out.println("Missing task description.");
                     System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
                 }
             } else if (line.startsWith("event")) {
@@ -190,5 +184,25 @@ public class Wqchat {
         printLine();
         System.out.println("Bye. Hope to see you again soon!");
         printLine();
+    }
+
+    private static void addDeadline(String line) throws MissingDueTimeException, MissingDescriptionException {
+        int indexOfSlash = line.indexOf("/by");
+        if (indexOfSlash == -1) {
+            throw new MissingDueTimeException();
+        }
+
+        String description = line.substring(DEADLINE_DESCRIPTION_INDEX, indexOfSlash).trim();
+        if (description.isEmpty()) {
+            throw new MissingDescriptionException();
+        }
+        int indexOfBy = indexOfSlash + DEADLINE_BY_INDEX_INCREMENT;
+        String by = line.substring(indexOfBy).trim();
+        tasks[taskCount] = new Deadline(description, by);
+    }
+
+    private static void addTodo(String line) {
+        String description = line.substring(TODO_DESCRIPTION_INDEX).trim();
+        tasks[taskCount] = new Todo(description);
     }
 }
