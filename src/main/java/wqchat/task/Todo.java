@@ -1,3 +1,4 @@
+package wqchat.task;
 public class Todo extends Task {
     protected boolean isDone;
     public Todo(String description) {

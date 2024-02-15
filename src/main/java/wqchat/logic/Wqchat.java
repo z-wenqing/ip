@@ -1,6 +1,6 @@
+package wqchat.logic;
+import wqchat.task.*;
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.stream.StreamSupport;
 
 public class Wqchat {
     public static class NoTaskException extends Exception {
@@ -54,7 +54,7 @@ public class Wqchat {
         if (index + 1 > taskCount) {
             throw new InvalidIndexException();
         }
-        if (index <= 0) {
+        if (index < 0) {
             throw new NegativeIndexException();
         }
         tasks[index].markAsDone();
