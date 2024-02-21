@@ -49,7 +49,19 @@ public class Wqchat {
         printTaskCount();
         printLine();
         taskCount++;
+    }
 
+    private static void deleteTask(int index) {
+        printLine();
+        System.out.println("Noted. I've removed this task:");
+        System.out.println(tasks.get(index));
+        taskCount--;
+        if (taskCount == 1) {
+            System.out.println("Now you have 1 task in the list.");
+        } else {
+            System.out.println("Now you have " + taskCount + " tasks in the list.");
+        }
+        tasks.remove(index);
     }
 
     private static void markTaskAsDone(int index) throws InvalidIndexException, NegativeIndexException{
@@ -177,6 +189,10 @@ public class Wqchat {
 
                     printAddedTask();
                 }
+            } else if (line.startsWith("delete")) {
+                String[] words = line.split(" ");
+                int index = Integer.parseInt(words[1]) - 1;
+                deleteTask(index);
             } else {
                 System.out.println("Sorry I don't understand :(");
             }
