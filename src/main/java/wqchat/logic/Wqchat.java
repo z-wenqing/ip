@@ -120,7 +120,7 @@ public class Wqchat {
                 Scanner s = new Scanner(f);
                 while (s.hasNext()) {
                     String taskInFile = s.nextLine();
-                    tasks[taskCount] = extractTaskInfo(taskInFile);
+                    tasks.add(taskCount, extractTaskInfo(taskInFile));
                     taskCount++;
                 }
             }
