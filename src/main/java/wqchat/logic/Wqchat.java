@@ -1,12 +1,14 @@
 package wqchat.logic;
 import wqchat.task.*;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Wqchat {
     public static class NoTaskException extends Exception {
 
     }
-    private static Task[] tasks = new Task[100];
+
+    private static ArrayList<Task> tasks = new ArrayList<>();
     private static void printLine() {
         System.out.println("____________________________________________________________");
     }
@@ -35,7 +37,7 @@ public class Wqchat {
         for (int i = 0; i < taskCount; i++) {
             System.out.print(i + 1);
             System.out.print(".");
-            System.out.println(tasks[i].toString());
+            System.out.println(tasks.get(i).toString());
         }
         printLine();
     }
@@ -43,11 +45,23 @@ public class Wqchat {
     private static void printAddedTask() {
         printLine();
         System.out.println("Got it. I've added this task:");
-        System.out.println(tasks[taskCount]);
+        System.out.println(tasks.get(taskCount));
         printTaskCount();
         printLine();
         taskCount++;
+    }
 
+    private static void deleteTask(int index) {
+        printLine();
+        System.out.println("Noted. I've removed this task:");
+        System.out.println(tasks.get(index));
+        taskCount--;
+        if (taskCount == 1) {
+            System.out.println("Now you have 1 task in the list.");
+        } else {
+            System.out.println("Now you have " + taskCount + " tasks in the list.");
+        }
+        tasks.remove(index);
     }
 
     private static void markTaskAsDone(int index) throws InvalidIndexException, NegativeIndexException{
@@ -57,12 +71,12 @@ public class Wqchat {
         if (index < 0) {
             throw new NegativeIndexException();
         }
-        tasks[index].markAsDone();
+        tasks.get(index).markAsDone();
 
         printLine();
         System.out.println("Nice! I've marked this task as done:");
         System.out.print("[X] ");
-        System.out.println(tasks[index].getDescription());
+        System.out.println(tasks.get(index).getDescription());
         printLine();
     }
 
@@ -73,12 +87,12 @@ public class Wqchat {
         if (index <= 0) {
             throw new NegativeIndexException();
         }
-        tasks[index].markAsNotDone();
+        tasks.get(index).markAsNotDone();
 
         printLine();
         System.out.println("OK, I've marked this task as not done yet:");
         System.out.print("[ ] ");
-        System.out.println(tasks[index].getDescription());
+        System.out.println(tasks.get(index).getDescription());
         printLine();
     }
 
@@ -171,10 +185,14 @@ public class Wqchat {
                     String description = line.substring(EVENT_DESCRIPTION_INDEX, line.indexOf("/from"));
                     String from = line.substring(indexOfFrom, line.indexOf("/to") - 1); // -1 to exclude the space
                     String to = line.substring(indexOfTo);
-                    tasks[taskCount] = new Event(description, from, to);
+                    tasks.add(taskCount, new Event(description, from, to));
 
                     printAddedTask();
                 }
+            } else if (line.startsWith("delete")) {
+                String[] words = line.split(" ");
+                int index = Integer.parseInt(words[1]) - 1;
+                deleteTask(index);
             } else {
                 System.out.println("Sorry I don't understand :(");
             }
@@ -198,11 +216,11 @@ public class Wqchat {
         }
         int indexOfBy = indexOfSlash + DEADLINE_BY_INDEX_INCREMENT;
         String by = line.substring(indexOfBy).trim();
-        tasks[taskCount] = new Deadline(description, by);
+        tasks.add(taskCount, new Deadline(description, by));
     }
 
     private static void addTodo(String line) {
         String description = line.substring(TODO_DESCRIPTION_INDEX).trim();
-        tasks[taskCount] = new Todo(description);
+        tasks.add(taskCount, new Todo(description));
     }
 }
