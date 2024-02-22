@@ -168,8 +168,8 @@ public class Wqchat {
         return t;
     }
 
-    private static void writeToFile(String filePath, String textToAdd, boolean isAppend) throws IOException{
-        FileWriter fw = new FileWriter(filePath, isAppend);
+    private static void writeToFile(String textToAdd, boolean isAppend) throws IOException{
+        FileWriter fw = new FileWriter("tasks.txt", isAppend);
         fw.write(textToAdd);
         fw.close();
     }
@@ -179,18 +179,18 @@ public class Wqchat {
             String type = tasks.get(index).getType();
             switch (type) {
             case "T": {
-                writeToFile("tasks.txt", tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription() + System.lineSeparator(), true);
+                writeToFile(tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription() + System.lineSeparator(), true);
                 break;
             }
             case "D": {
                 Deadline d = (Deadline) tasks.get(index);
-                writeToFile("tasks.txt", tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
+                writeToFile(tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
                         + " | " + "by " + d.getBy() + System.lineSeparator(), true);
                 break;
             }
             case "E": {
                 Event e = (Event) tasks.get(index);
-                writeToFile("tasks.txt", tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
+                writeToFile(tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
                         + " | " + e.getFrom() + " - " + e.getTo() + System.lineSeparator(), true);
                 break;
             }
@@ -207,7 +207,7 @@ public class Wqchat {
         List<String> lines = Files.readAllLines(Path.of("tasks.txt"));
         lines.remove(index);
         for (int i = 0; i < taskCount - 1; i++) {
-            writeToFile("tasks.txt", lines.get(i) + System.lineSeparator(), i != 0);
+            writeToFile(lines.get(i) + System.lineSeparator(), i != 0);
         }
 
     }
