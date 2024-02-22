@@ -3,6 +3,9 @@ import wqchat.task.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.FileWriter;
@@ -112,7 +115,7 @@ public class Wqchat {
 
     private static void loadData() {
         taskCount = 0;
-        File f = new File("data/tasks.txt");
+        File f = new File("tasks.txt");
         try {
             if (f.createNewFile()) {
                 System.out.println("File created: " + f.getName());
@@ -162,8 +165,8 @@ public class Wqchat {
         return t;
     }
 
-    private static void writeToFile(String filePath, String textToAdd) throws IOException{
-        FileWriter fw = new FileWriter(filePath, true);
+    private static void writeToFile(String filePath, String textToAdd, boolean isAppend) throws IOException{
+        FileWriter fw = new FileWriter(filePath, isAppend);
         fw.write(textToAdd);
         fw.close();
     }
@@ -173,25 +176,37 @@ public class Wqchat {
             String type = tasks.get(index).getType();
             switch (type) {
             case "T": {
-                writeToFile("data/tasks.txt", tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription() + System.lineSeparator());
+                writeToFile("tasks.txt", tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription() + System.lineSeparator(), true);
                 break;
             }
             case "D": {
                 Deadline d = (Deadline) tasks.get(index);
-                writeToFile("data/tasks.txt", tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
-                        + " | " + "by " + d.getBy() + System.lineSeparator());
+                writeToFile("tasks.txt", tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
+                        + " | " + "by " + d.getBy() + System.lineSeparator(), true);
                 break;
             }
             case "E": {
                 Event e = (Event) tasks.get(index);
-                writeToFile("data/tasks.txt", tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
-                        + " | " + e.getFrom() + " - " + e.getTo() + System.lineSeparator());
+                writeToFile("tasks.txt", tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
+                        + " | " + e.getFrom() + " - " + e.getTo() + System.lineSeparator(), true);
                 break;
             }
             }
         } catch (IOException e) {
             System.out.println("Something went wrong...");
         }
+    }
+
+    private static void deleteTaskInFile(int index) throws IOException {
+        File f = new File("tasks.txt");
+        Scanner s = new Scanner(f);
+
+        List<String> lines = Files.readAllLines(Path.of("tasks.txt"));
+        lines.remove(index);
+        for (int i = 0; i < taskCount - 1; i++) {
+            writeToFile("tasks.txt", lines.get(i) + System.lineSeparator(), i != 0);
+        }
+
     }
 
     //exception classes
@@ -288,6 +303,11 @@ public class Wqchat {
             } else if (line.startsWith("delete")) {
                 String[] words = line.split(" ");
                 int index = Integer.parseInt(words[1]) - 1;
+                try {
+                    deleteTaskInFile(index);
+                } catch (IOException e) {
+                    System.out.println("Something went wrong...");
+                }
                 deleteTask(index);
             } else {
                 System.out.println("Sorry I don't understand :(");
