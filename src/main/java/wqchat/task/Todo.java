@@ -1,14 +1,14 @@
 package wqchat.task;
 public class Todo extends Task {
-    protected boolean isDone;
-    public Todo(String description) {
+    public Todo(String description, boolean isDone) {
         super(description);
     }
     public void setDone(boolean done) {
         isDone = done;
     }
-    public boolean isDone() {
-        return isDone;
+
+    public String getType() {
+        return "T";
     }
     @Override
     public String toString() {
