@@ -1,6 +1,10 @@
 package wqchat.logic;
 import wqchat.task.*;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
+import java.io.FileWriter;
 
 public class Wqchat {
     public static class NoTaskException extends Exception {
@@ -64,6 +68,8 @@ public class Wqchat {
         System.out.print("[X] ");
         System.out.println(tasks[index].getDescription());
         printLine();
+
+
     }
 
     private static void markTaskAsUndone(int index) throws InvalidIndexException, NegativeIndexException {
@@ -90,6 +96,90 @@ public class Wqchat {
         }
     }
 
+    private static void loadData() {
+        taskCount = 0;
+        File f = new File("data/tasks.txt");
+        try {
+            if (f.createNewFile()) {
+                System.out.println("File created: " + f.getName());
+            } else {
+                Scanner s = new Scanner(f);
+                while (s.hasNext()) {
+                    String taskInFile = s.nextLine();
+                    tasks[taskCount] = extractTaskInfo(taskInFile);
+                    taskCount++;
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
+    }
+
+    private static Task extractTaskInfo(String line) {
+        String[] words = line.split("\\|");
+        String type = words[TYPE_INDEX_IN_FILE].trim();
+        boolean isDone = words[IS_DONE_INDEX_IN_FILE].trim().equals("1");
+        String description = words[DESCRIPTION_INDEX_IN_FILE].trim();
+        String time = "";
+
+        if (type.equals("D") || type.equals("E")) {
+            time = words[TIME_INDEX_IN_FILE];
+        }
+        Task t = null;
+
+        switch (type) {
+        case "T": {
+            t = new Todo(description, isDone);
+            break;
+        }
+        case "D": {
+            t = new Deadline(description, time);
+            break;
+        }
+        case "E": {
+            int indexOfTo = time.indexOf("-");
+            String from = time.substring(0, indexOfTo).trim();
+            String to = time.substring(indexOfTo + 1).trim();
+            t = new Event(description, from, to);
+            break;
+        }
+        }
+        return t;
+    }
+
+    private static void writeToFile(String filePath, String textToAdd) throws IOException{
+        FileWriter fw = new FileWriter(filePath, true);
+        fw.write(textToAdd);
+        fw.close();
+    }
+
+    private static void addTaskInFile(int index) {
+        try {
+            String type = tasks[index].getType();
+            switch (type) {
+            case "T": {
+                writeToFile("data/tasks.txt", tasks[index].getType() + " | " + tasks[index].getIsDone() + " | " + tasks[index].getDescription() + System.lineSeparator());
+                break;
+            }
+            case "D": {
+                Deadline d = (Deadline) tasks[index];
+                writeToFile("data/tasks.txt", tasks[index].getType() + " | " + tasks[index].getIsDone() + " | " + tasks[index].getDescription()
+                        + " | " + "by " + d.getBy() + System.lineSeparator());
+                break;
+            }
+            case "E": {
+                Event e = (Event) tasks[index];
+                writeToFile("data/tasks.txt", tasks[index].getType() + " | " + tasks[index].getIsDone() + " | " + tasks[index].getDescription()
+                        + " | " + e.getFrom() + " - " + e.getTo() + System.lineSeparator());
+                break;
+            }
+            }
+        } catch (IOException e) {
+            System.out.println("Something went wrong...");
+        }
+    }
+
     //exception classes
     public static class InvalidIndexException extends Exception {
 
@@ -110,8 +200,13 @@ public class Wqchat {
     private static final int DEADLINE_DESCRIPTION_INDEX = 9;
     private static final int DEADLINE_BY_INDEX_INCREMENT = 4;
     private static final int TODO_DESCRIPTION_INDEX = 5;
+    private static final int TYPE_INDEX_IN_FILE = 0;
+    private static final int IS_DONE_INDEX_IN_FILE = 1;
+    private static final int DESCRIPTION_INDEX_IN_FILE = 2;
+    private static final int TIME_INDEX_IN_FILE = 3;
     public static void main(String[] args) throws InvalidIndexException, MissingDueTimeException {
         printGreetings();
+        loadData();
 
         String line;
         Scanner in = new Scanner(System.in);
@@ -172,6 +267,7 @@ public class Wqchat {
                     String from = line.substring(indexOfFrom, line.indexOf("/to") - 1); // -1 to exclude the space
                     String to = line.substring(indexOfTo);
                     tasks[taskCount] = new Event(description, from, to);
+                    addTaskInFile(taskCount);
 
                     printAddedTask();
                 }
@@ -199,10 +295,12 @@ public class Wqchat {
         int indexOfBy = indexOfSlash + DEADLINE_BY_INDEX_INCREMENT;
         String by = line.substring(indexOfBy).trim();
         tasks[taskCount] = new Deadline(description, by);
+        addTaskInFile(taskCount);
     }
 
     private static void addTodo(String line) {
         String description = line.substring(TODO_DESCRIPTION_INDEX).trim();
-        tasks[taskCount] = new Todo(description);
+        tasks[taskCount] = new Todo(description, false);
+        addTaskInFile(taskCount);
     }
 }

@@ -1,5 +1,5 @@
 package wqchat.task;
-public class Task {
+public abstract class Task {
     protected String description;
     protected boolean isDone;
 
@@ -23,9 +23,10 @@ public class Task {
         return description;
     }
 
-    public boolean isDone() {
-        return isDone;
+    public int getIsDone() {
+        return isDone ? 1 : 0;
     }
+    public abstract String getType();
 
     @Override
     public String toString() {
