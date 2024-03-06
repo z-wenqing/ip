@@ -1,4 +1,5 @@
 package wqchat.logic;
+
 import wqchat.task.Task;
 import wqchat.Ui;
 import wqchat.Storage;
@@ -22,28 +23,8 @@ public class Wqchat {
         parser = new Parser();
         taskList = new TaskList();
     }
-
-    public static class NoTaskException extends Exception {
-
-    }
-
     private static final ArrayList<Task> tasks = new ArrayList<>();
-
-    private static void handleInvalidIndexError() {
-        if (taskCount == 1) {
-            System.out.println("You only have 1 task!");
-        } else {
-            System.out.println("You only have " + taskCount + " tasks!");
-        }
-    }
-
-
-    //exception classes
-
-
     protected static int taskCount = 0;
-
-
 
     public void run() {
         ui.printGreetings();
@@ -58,7 +39,7 @@ public class Wqchat {
             if (line.equals("list")) {
                 try {
                     ui.printList(taskCount, tasks);
-                } catch (NoTaskException e) {
+                } catch (WqchatException.NoTaskException e) {
                     System.out.println("Good job! There is no pending tasks");
                 }
             } else if (line.startsWith("mark")) {
@@ -67,7 +48,7 @@ public class Wqchat {
                 try {
                     taskList.markTaskAsDone(index, taskCount, tasks, ui);
                 } catch (WqchatException.InvalidIndexException e) {
-                    handleInvalidIndexError();
+                    WqchatException.handleInvalidIndexError(taskCount);
                 } catch (WqchatException.NegativeIndexException e) {
                     ui.printNegativeIndexException();
                 }
@@ -78,7 +59,7 @@ public class Wqchat {
                 try {
                     taskList.markTaskAsUndone(index, taskCount, tasks, ui);
                 } catch (WqchatException.InvalidIndexException e) {
-                    handleInvalidIndexError();
+                    WqchatException.handleInvalidIndexError(taskCount);
                 } catch (WqchatException.NegativeIndexException e) {
                     ui.printNegativeIndexException();
                 }

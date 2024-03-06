@@ -37,11 +37,11 @@ public class Ui {
         printLine();
     }
 
-    public void printList(int taskCount, ArrayList<Task> tasks) throws Wqchat.NoTaskException {
+    public void printList(int taskCount, ArrayList<Task> tasks) throws WqchatException.NoTaskException {
         printLine();
 
         if (taskCount == 0) {
-            throw new Wqchat.NoTaskException();
+            throw new WqchatException.NoTaskException();
         }
         System.out.println("Here are the tasks in your list: ");
         for (int i = 0; i < taskCount; i++) {
