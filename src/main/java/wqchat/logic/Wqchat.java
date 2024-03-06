@@ -105,6 +105,10 @@ public class Wqchat {
                 }
                 taskList.deleteTask(index, ui, tasks, taskCount);
                 taskCount--;
+            } else if (line.startsWith("find")) {
+                ui.printLine();
+                taskList.findTask(tasks, line);
+                ui.printLine();
             } else {
                 System.out.println("Sorry I don't understand :(");
             }
