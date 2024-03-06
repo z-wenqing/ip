@@ -25,39 +25,10 @@ public class Wqchat {
 
     }
 
-    private static ArrayList<Task> tasks = new ArrayList<>();
+    private static final ArrayList<Task> tasks = new ArrayList<>();
 
 
-    
-    private void printGreetings() {
-        ui.printLine();
-        System.out.println("Hello! I'm Wqchat");
-        System.out.println("What can I do for you?");
-        ui.printLine();
-    }
-    private void printList() throws NoTaskException {
-        ui.printLine();
 
-        if (taskCount == 0) {
-            throw new NoTaskException();
-        }
-        System.out.println("Here are the tasks in your list: ");
-        for (int i = 0; i < taskCount; i++) {
-            System.out.print(i + 1);
-            System.out.print(".");
-            System.out.println(tasks.get(i).toString());
-        }
-        ui.printLine();
-    }
-
-    private void printAddedTask() {
-        ui.printLine();
-        System.out.println("Got it. I've added this task:");
-        System.out.println(tasks.get(taskCount));
-        ui.printTaskCount(taskCount);
-        ui.printLine();
-        taskCount++;
-    }
 
     private void deleteTask(int index) {
         ui.printLine();
@@ -233,7 +204,7 @@ public class Wqchat {
     private static final int DESCRIPTION_INDEX_IN_FILE = 2;
     private static final int TIME_INDEX_IN_FILE = 3;
     public void run() throws InvalidIndexException, MissingDueTimeException {
-        printGreetings();
+        ui.printGreetings();
         loadData();
 
         String line;
@@ -243,7 +214,7 @@ public class Wqchat {
         while (!line.equals("bye")) {
             if (line.equals("list")) {
                 try {
-                    printList();
+                    ui.printList(taskCount, tasks);
                 } catch (NoTaskException e) {
                     System.out.println("Good job! There is no pending tasks");
                 }
@@ -272,14 +243,16 @@ public class Wqchat {
             } else if (line.startsWith("todo")) {
                 try {
                     addTodo(line);
-                    printAddedTask();
+                    ui.printAddedTask(tasks, taskCount);
+                    taskCount++;
                 } catch (StringIndexOutOfBoundsException e){
                     System.out.println("You never say what you want to do...");
                 }
             } else if (line.startsWith("deadline")) {
                 try {
                     addDeadline(line);
-                    printAddedTask();
+                    ui.printAddedTask(tasks, taskCount);
+                    taskCount++;
                 } catch (MissingDueTimeException e) {
                     System.out.println("When is it due?");
                     System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
@@ -297,7 +270,8 @@ public class Wqchat {
 
                     tasks.add(taskCount, new Event(description, from, to));
                     addTaskInFile(taskCount);
-                    printAddedTask();
+                    ui.printAddedTask(tasks, taskCount);
+                    taskCount++;
                 }
             } else if (line.startsWith("delete")) {
                 String[] words = line.split(" ");
