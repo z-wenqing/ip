@@ -1,25 +1,26 @@
 package wqchat.logic;
 import wqchat.task.Task;
-import wqchat.task.Todo;
-import wqchat.task.Deadline;
 import wqchat.task.Event;
 import wqchat.Ui;
 import wqchat.Storage;
 import wqchat.Parser;
+import wqchat.TaskList;
 
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Wqchat {
-    private Ui ui;
-    private Storage storage;
-    private Parser parser;
+    private final Ui ui;
+    private final Storage storage;
+    private final Parser parser;
+    private final TaskList taskList;
 
     public Wqchat(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
         parser = new Parser();
+        taskList = new TaskList();
     }
 
     public static class NoTaskException extends Exception {
@@ -27,54 +28,6 @@ public class Wqchat {
     }
 
     private static final ArrayList<Task> tasks = new ArrayList<>();
-
-
-
-
-    private void deleteTask(int index) {
-        ui.printLine();
-        System.out.println("Noted. I've removed this task:");
-        System.out.println(tasks.get(index));
-        taskCount--;
-        if (taskCount == 1) {
-            System.out.println("Now you have 1 task in the list.");
-        } else {
-            System.out.println("Now you have " + taskCount + " tasks in the list.");
-        }
-        tasks.remove(index);
-    }
-
-    private void markTaskAsDone(int index) throws InvalidIndexException, NegativeIndexException{
-        if (index + 1 > taskCount) {
-            throw new InvalidIndexException();
-        }
-        if (index < 0) {
-            throw new NegativeIndexException();
-        }
-        tasks.get(index).markAsDone();
-
-        ui.printLine();
-        System.out.println("Nice! I've marked this task as done:");
-        System.out.print("[X] ");
-        System.out.println(tasks.get(index).getDescription());
-        ui.printLine();
-    }
-
-    private void markTaskAsUndone(int index) throws InvalidIndexException, NegativeIndexException {
-        if (index + 1 > taskCount) {
-            throw new InvalidIndexException();
-        }
-        if (index <= 0) {
-            throw new NegativeIndexException();
-        }
-        tasks.get(index).markAsNotDone();
-
-        ui.printLine();
-        System.out.println("OK, I've marked this task as not done yet:");
-        System.out.print("[ ] ");
-        System.out.println(tasks.get(index).getDescription());
-        ui.printLine();
-    }
 
     private static void handleInvalidIndexError() {
         if (taskCount == 1) {
@@ -124,7 +77,7 @@ public class Wqchat {
                 String[] words = line.split(" ");
                 int index = Integer.parseInt(words[1]) - 1;
                 try {
-                    markTaskAsDone(index);
+                    taskList.markTaskAsDone(index, taskCount, tasks, ui);
                 } catch (InvalidIndexException e) {
                     handleInvalidIndexError();
                 } catch (NegativeIndexException e) {
@@ -135,7 +88,7 @@ public class Wqchat {
                 String[] words = line.split(" ");
                 int index = Integer.parseInt(words[1]) - 1;
                 try {
-                    markTaskAsUndone(index);
+                    taskList.markTaskAsUndone(index, taskCount, tasks, ui);
                 } catch (InvalidIndexException e) {
                     handleInvalidIndexError();
                 } catch (NegativeIndexException e) {
@@ -183,7 +136,8 @@ public class Wqchat {
                 } catch (IOException e) {
                     System.out.println("Something went wrong...");
                 }
-                deleteTask(index);
+                taskList.deleteTask(index, ui, tasks, taskCount);
+                taskCount--;
             } else {
                 System.out.println("Sorry I don't understand :(");
             }
@@ -194,10 +148,7 @@ public class Wqchat {
         System.out.println("Bye. Hope to see you again soon!");
         ui.printLine();
     }
-
-
-
-    public static void main(String[] args) throws InvalidIndexException, MissingDueTimeException {
+    public static void main(String[] args) {
         new Wqchat("tasks.txt").run();
     }
 }
