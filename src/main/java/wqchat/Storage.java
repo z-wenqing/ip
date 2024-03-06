@@ -25,6 +25,12 @@ public class Storage {
     public Storage(String filePath) {
         this.filePath = filePath;
     }
+
+    /**
+     * Loads data from the data file and add tasks in the tasks ArrayList
+     *
+     * @param tasks a list of tasks added.
+     */
     public void loadData(ArrayList<Task> tasks) {
         File f = new File(filePath);
         try {
@@ -43,6 +49,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Processes text in data file and extracts task information including description, from, to and by
+     *
+     * @param line user input.
+     * @return a task from the data file at the current lie
+     */
     public Task extractTaskInfo(String line) {
         String[] words = line.split("\\|");
         String type = words[TYPE_INDEX_IN_FILE].trim();
@@ -76,6 +88,14 @@ public class Storage {
         return t;
     }
 
+    /**
+     * Writes the text to data file
+     *
+     * @param filePath a relative path giving the location of the data file, relative to the current folder.
+     * @param textToAdd text to write to the file.
+     * @param isAppend whether to append the text or overwrite the whole file.
+     * @throws IOException If there is something wrong.
+     */
     public static void writeToFile(String filePath, String textToAdd, boolean isAppend) throws IOException{
         FileWriter fw = new FileWriter(filePath, isAppend);
         fw.write(textToAdd);
@@ -107,6 +127,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Deletes a task in the data file.
+     *
+     * @param index index of the task to be deleted in the file
+     * @param taskCount number of tasks added.
+     * @throws IOException If there is something wrong.
+     */
     public void deleteTaskInFile(int index, int taskCount) throws IOException {
         File f = new File(filePath);
         Scanner s = new Scanner(f);

@@ -18,6 +18,15 @@ public class Parser {
     public Parser() {
     }
 
+    /**
+     * Processes deadline from user input.
+     *
+     * @param line user input.
+     * @param tasks a list of tasks added.
+     * @param taskCount number of tasks added.
+     * @throws WqchatException.MissingDueTimeException If "/by" is not found.
+     * @throws WqchatException.MissingDescriptionException If description of the deadline is not found.
+     */
     public void addDeadline(String line, ArrayList<Task> tasks, int taskCount) throws WqchatException.MissingDueTimeException, WqchatException.MissingDescriptionException {
         int indexOfSlash = line.indexOf("/by");
         if (indexOfSlash == -1) {
@@ -34,11 +43,27 @@ public class Parser {
         tasks.add(taskCount, new Deadline(description, by));
     }
 
+    /**
+     * Processes todo from user input.
+     *
+     * @param line user input.
+     * @param tasks a list of tasks added.
+     * @param taskCount number of tasks added.
+     */
     public void addTodo(String line, ArrayList<Task> tasks, int taskCount) {
         String description = line.substring(TODO_DESCRIPTION_INDEX).trim();
         tasks.add(taskCount, new Todo(description, false));
     }
 
+    /**
+     * Processes event from user input.
+     *
+     * @param line user input.
+     * @param tasks a list of tasks added.
+     * @param taskCount number of tasks added.
+     * @throws WqchatException.MissingDueTimeException If "/from" or "/to" is not found.
+     * @throws WqchatException.MissingDescriptionException If description of the event is not found.
+     */
     public void addEvent(String line, ArrayList<Task> tasks, int taskCount) throws WqchatException.MissingDueTimeException, WqchatException.MissingDescriptionException {
         int indexOfFrom = line.indexOf("/from");
         if (indexOfFrom == -1) {

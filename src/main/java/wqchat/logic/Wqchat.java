@@ -103,7 +103,9 @@ public class Wqchat {
                 } catch (IOException e) {
                     System.out.println("Something went wrong...");
                 }
-                taskList.deleteTask(index, ui, tasks, taskCount);
+                ui.printLine();
+                taskList.deleteTask(index, tasks, taskCount);
+                ui.printLine();
                 taskCount--;
             } else if (line.startsWith("find")) {
                 ui.printLine();

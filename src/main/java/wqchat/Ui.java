@@ -13,6 +13,11 @@ public class Ui {
         System.out.println("____________________________________________________________");
     }
 
+    /**
+     * Prints the updated number of tasks in the list after adding a task
+     *
+     * @param taskCount number of tasks added.
+     */
     public void printTaskCount(int taskCount) {
         if (taskCount == 0) {
             System.out.println("Now you have 1 task in the list.");
@@ -22,6 +27,12 @@ public class Ui {
         }
     }
 
+    /**
+     * Prints the information of the added task.
+     *
+     * @param tasks a list of tasks added.
+     * @param taskCount number of tasks added.
+     */
     public void printAddedTask(ArrayList<Task> tasks, int taskCount) {
         printLine();
         System.out.println("Got it. I've added this task:");
@@ -37,6 +48,13 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Prints a list of tasks added
+     *
+     * @param taskCount number of tasks added.
+     * @param tasks a list of tasks added.
+     * @throws WqchatException.NoTaskException If taskCount = 0.
+     */
     public void printList(int taskCount, ArrayList<Task> tasks) throws WqchatException.NoTaskException {
         printLine();
 
@@ -56,6 +74,12 @@ public class Ui {
         System.out.println("I want a positive number! :(");
     }
 
+    /**
+     * Prints error message when time is missing.
+     *
+     * @param tasks a list of tasks added.
+     * @param taskCount number of tasks added.
+     */
     public void printMissingDueTimeException(ArrayList<Task> tasks, int taskCount) {
         String type = tasks.get(taskCount - 1).getType();
 
@@ -70,6 +94,11 @@ public class Ui {
         }
     }
 
+    /**
+     * Prints error message when task description is missing.
+     * @param tasks a list of tasks added.
+     * @param taskCount number of tasks added.
+     */
     public void printMissingDescriptionException(ArrayList<Task> tasks, int taskCount) {
         System.out.println("Missing task description.");
         String type = tasks.get(taskCount - 1).getType();
@@ -84,10 +113,5 @@ public class Ui {
         case "E":
             System.out.println("Tell me more information in the format of: event [task] /from [time] /to [time]");
         }
-
-
-
-
-
     }
 }
