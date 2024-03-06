@@ -53,7 +53,7 @@ public class Parser {
         if (description.isEmpty()) {
             throw new WqchatException.MissingDescriptionException();
         }
-        String from = line.substring(indexOfFrom + Event_FROM_INDEX_INCREMENT, indexOfTo - 1); // -1 to exclude the space
+        String from = line.substring(indexOfFrom + Event_FROM_INDEX_INCREMENT, indexOfTo).trim(); // -1 to exclude the space
         String to = line.substring(indexOfTo + EVENT_TO_INDEX_INCREMENT);
 
         tasks.add(taskCount, new Event(description, from, to));

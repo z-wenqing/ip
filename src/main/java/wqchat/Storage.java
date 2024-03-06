@@ -20,6 +20,7 @@ public class Storage {
     private static final int IS_DONE_INDEX_IN_FILE = 1;
     private static final int DESCRIPTION_INDEX_IN_FILE = 2;
     private static final int TIME_INDEX_IN_FILE = 3;
+    private static final int DEADLINE_BY_INDEX_INCREMENT = 3;
 
     public Storage(String filePath) {
         this.filePath = filePath;
@@ -50,7 +51,7 @@ public class Storage {
         String time = "";
 
         if (type.equals("D") || type.equals("E")) {
-            time = words[TIME_INDEX_IN_FILE];
+            time = words[TIME_INDEX_IN_FILE].trim();
         }
         Task t = null;
 
@@ -60,7 +61,8 @@ public class Storage {
             break;
         }
         case "D": {
-            t = new Deadline(description, time);
+            String by = time.substring(DEADLINE_BY_INDEX_INCREMENT).trim();
+            t = new Deadline(description, by);
             break;
         }
         case "E": {
