@@ -1,10 +1,10 @@
 package wqchat.logic;
 import wqchat.task.Task;
-import wqchat.task.Event;
 import wqchat.Ui;
 import wqchat.Storage;
 import wqchat.Parser;
 import wqchat.TaskList;
+import wqchat.WqchatException;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -39,22 +39,10 @@ public class Wqchat {
 
 
     //exception classes
-    public static class InvalidIndexException extends Exception {
 
-    }
-    public static class NegativeIndexException extends Exception {
-
-    }
-    public static class MissingDueTimeException extends Exception {
-
-    }
-    public static class MissingDescriptionException extends Exception {
-
-    }
 
     protected static int taskCount = 0;
-    private static final int EVENT_DESCRIPTION_INDEX = 6;
-    private static final int EVENT_TO_INDEX_INCREMENT = 4;
+
 
 
     public void run() {
@@ -78,9 +66,9 @@ public class Wqchat {
                 int index = Integer.parseInt(words[1]) - 1;
                 try {
                     taskList.markTaskAsDone(index, taskCount, tasks, ui);
-                } catch (InvalidIndexException e) {
+                } catch (WqchatException.InvalidIndexException e) {
                     handleInvalidIndexError();
-                } catch (NegativeIndexException e) {
+                } catch (WqchatException.NegativeIndexException e) {
                     System.out.println("Positive number please.");
                 }
 
@@ -89,15 +77,16 @@ public class Wqchat {
                 int index = Integer.parseInt(words[1]) - 1;
                 try {
                     taskList.markTaskAsUndone(index, taskCount, tasks, ui);
-                } catch (InvalidIndexException e) {
+                } catch (WqchatException.InvalidIndexException e) {
                     handleInvalidIndexError();
-                } catch (NegativeIndexException e) {
+                } catch (WqchatException.NegativeIndexException e) {
                     System.out.println("I want a positive number!");
                 }
 
             } else if (line.startsWith("todo")) {
                 try {
-                    parser.addTodo(line, tasks, taskCount, storage);
+                    parser.addTodo(line, tasks, taskCount);
+                    storage.addTaskInFile(taskCount, tasks);
                     ui.printAddedTask(tasks, taskCount);
                     taskCount++;
                 } catch (StringIndexOutOfBoundsException e){
@@ -105,28 +94,29 @@ public class Wqchat {
                 }
             } else if (line.startsWith("deadline")) {
                 try {
-                    parser.addDeadline(line, tasks, taskCount, storage);
+                    parser.addDeadline(line, tasks, taskCount);
+                    storage.addTaskInFile(taskCount, tasks);
                     ui.printAddedTask(tasks, taskCount);
                     taskCount++;
-                } catch (MissingDueTimeException e) {
+                } catch (WqchatException.MissingDueTimeException e) {
                     System.out.println("When is it due?");
                     System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
-                } catch (MissingDescriptionException e) {
+                } catch (WqchatException.MissingDescriptionException e) {
                     System.out.println("Missing task description.");
                     System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
                 }
             } else if (line.startsWith("event")) {
-                if (line.contains("/from") && line.contains("/to")) {
-                    int indexOfFrom = line.indexOf("/from") + EVENT_DESCRIPTION_INDEX;
-                    int indexOfTo = line.indexOf("/to") + EVENT_TO_INDEX_INCREMENT;
-                    String description = line.substring(EVENT_DESCRIPTION_INDEX, line.indexOf("/from"));
-                    String from = line.substring(indexOfFrom, line.indexOf("/to") - 1); // -1 to exclude the space
-                    String to = line.substring(indexOfTo);
-
-                    tasks.add(taskCount, new Event(description, from, to));
+                try {
+                    parser.addEvent(line, tasks, taskCount);
                     storage.addTaskInFile(taskCount, tasks);
                     ui.printAddedTask(tasks, taskCount);
                     taskCount++;
+                } catch (WqchatException.MissingDueTimeException e) {
+                    System.out.println("The time of the event is not complete");
+                    System.out.println("Tell me more information in the format of: event [task] /from [time] /to [time]");
+                } catch (WqchatException.MissingDescriptionException e) {
+                    System.out.println("Missing task description.");
+                    System.out.println("Tell me more information in the format of: event [task] /from [time] /to [time]");
                 }
             } else if (line.startsWith("delete")) {
                 String[] words = line.split(" ");

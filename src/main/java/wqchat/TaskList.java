@@ -1,6 +1,4 @@
 package wqchat;
-
-import wqchat.logic.Wqchat;
 import wqchat.task.Task;
 
 import java.util.ArrayList;
@@ -18,12 +16,12 @@ public class TaskList {
         tasks.remove(index);
     }
 
-    public void markTaskAsDone(int index, int taskCount, ArrayList<Task> tasks, Ui ui) throws Wqchat.InvalidIndexException, Wqchat.NegativeIndexException {
+    public void markTaskAsDone(int index, int taskCount, ArrayList<Task> tasks, Ui ui) throws WqchatException.InvalidIndexException, WqchatException.NegativeIndexException {
         if (index + 1 > taskCount) {
-            throw new Wqchat.InvalidIndexException();
+            throw new WqchatException.InvalidIndexException();
         }
         if (index < 0) {
-            throw new Wqchat.NegativeIndexException();
+            throw new WqchatException.NegativeIndexException();
         }
         tasks.get(index).markAsDone();
 
@@ -34,12 +32,12 @@ public class TaskList {
         ui.printLine();
     }
 
-    public void markTaskAsUndone(int index, int taskCount, ArrayList<Task> tasks, Ui ui) throws Wqchat.InvalidIndexException, Wqchat.NegativeIndexException {
+    public void markTaskAsUndone(int index, int taskCount, ArrayList<Task> tasks, Ui ui) throws WqchatException.InvalidIndexException, WqchatException.NegativeIndexException {
         if (index + 1 > taskCount) {
-            throw new Wqchat.InvalidIndexException();
+            throw new WqchatException.InvalidIndexException();
         }
         if (index <= 0) {
-            throw new Wqchat.NegativeIndexException();
+            throw new WqchatException.NegativeIndexException();
         }
         tasks.get(index).markAsNotDone();
 
