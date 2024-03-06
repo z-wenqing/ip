@@ -5,6 +5,7 @@ import wqchat.task.Deadline;
 import wqchat.task.Event;
 import wqchat.Ui;
 import wqchat.Storage;
+import wqchat.Parser;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -13,10 +14,12 @@ import java.util.ArrayList;
 public class Wqchat {
     private Ui ui;
     private Storage storage;
+    private Parser parser;
 
     public Wqchat(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
+        parser = new Parser();
     }
 
     public static class NoTaskException extends Exception {
@@ -99,9 +102,7 @@ public class Wqchat {
     protected static int taskCount = 0;
     private static final int EVENT_DESCRIPTION_INDEX = 6;
     private static final int EVENT_TO_INDEX_INCREMENT = 4;
-    private static final int DEADLINE_DESCRIPTION_INDEX = 9;
-    private static final int DEADLINE_BY_INDEX_INCREMENT = 4;
-    private static final int TODO_DESCRIPTION_INDEX = 5;
+
 
     public void run() {
         ui.printGreetings();
@@ -143,7 +144,7 @@ public class Wqchat {
 
             } else if (line.startsWith("todo")) {
                 try {
-                    addTodo(line);
+                    parser.addTodo(line, tasks, taskCount, storage);
                     ui.printAddedTask(tasks, taskCount);
                     taskCount++;
                 } catch (StringIndexOutOfBoundsException e){
@@ -151,7 +152,7 @@ public class Wqchat {
                 }
             } else if (line.startsWith("deadline")) {
                 try {
-                    addDeadline(line);
+                    parser.addDeadline(line, tasks, taskCount, storage);
                     ui.printAddedTask(tasks, taskCount);
                     taskCount++;
                 } catch (MissingDueTimeException e) {
@@ -194,28 +195,7 @@ public class Wqchat {
         ui.printLine();
     }
 
-    private void addDeadline(String line) throws MissingDueTimeException, MissingDescriptionException {
-        int indexOfSlash = line.indexOf("/by");
-        if (indexOfSlash == -1) {
-            throw new MissingDueTimeException();
-        }
 
-        String description = line.substring(DEADLINE_DESCRIPTION_INDEX, indexOfSlash).trim();
-        if (description.isEmpty()) {
-            throw new MissingDescriptionException();
-        }
-        int indexOfBy = indexOfSlash + DEADLINE_BY_INDEX_INCREMENT;
-        String by = line.substring(indexOfBy).trim();
-
-        tasks.add(taskCount, new Deadline(description, by));
-        storage.addTaskInFile(taskCount, tasks);
-    }
-
-    private void addTodo(String line) {
-        String description = line.substring(TODO_DESCRIPTION_INDEX).trim();
-        tasks.add(taskCount, new Todo(description, false));
-        storage.addTaskInFile(taskCount, tasks);
-    }
 
     public static void main(String[] args) throws InvalidIndexException, MissingDueTimeException {
         new Wqchat("tasks.txt").run();
