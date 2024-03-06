@@ -69,7 +69,7 @@ public class Wqchat {
                 } catch (WqchatException.InvalidIndexException e) {
                     handleInvalidIndexError();
                 } catch (WqchatException.NegativeIndexException e) {
-                    System.out.println("Positive number please.");
+                    ui.printNegativeIndexException();
                 }
 
             } else if (line.startsWith("unmark")) {
@@ -80,7 +80,7 @@ public class Wqchat {
                 } catch (WqchatException.InvalidIndexException e) {
                     handleInvalidIndexError();
                 } catch (WqchatException.NegativeIndexException e) {
-                    System.out.println("I want a positive number!");
+                    ui.printNegativeIndexException();
                 }
 
             } else if (line.startsWith("todo")) {
@@ -99,11 +99,9 @@ public class Wqchat {
                     ui.printAddedTask(tasks, taskCount);
                     taskCount++;
                 } catch (WqchatException.MissingDueTimeException e) {
-                    System.out.println("When is it due?");
-                    System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
+                    ui.printMissingDueTimeException(tasks, taskCount);
                 } catch (WqchatException.MissingDescriptionException e) {
-                    System.out.println("Missing task description.");
-                    System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
+                    ui.printMissingDescriptionException(tasks, taskCount);
                 }
             } else if (line.startsWith("event")) {
                 try {
@@ -112,11 +110,9 @@ public class Wqchat {
                     ui.printAddedTask(tasks, taskCount);
                     taskCount++;
                 } catch (WqchatException.MissingDueTimeException e) {
-                    System.out.println("The time of the event is not complete");
-                    System.out.println("Tell me more information in the format of: event [task] /from [time] /to [time]");
+                    ui.printMissingDueTimeException(tasks, taskCount);
                 } catch (WqchatException.MissingDescriptionException e) {
-                    System.out.println("Missing task description.");
-                    System.out.println("Tell me more information in the format of: event [task] /from [time] /to [time]");
+                    ui.printMissingDescriptionException(tasks, taskCount);
                 }
             } else if (line.startsWith("delete")) {
                 String[] words = line.split(" ");
