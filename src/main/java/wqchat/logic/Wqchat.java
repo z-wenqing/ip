@@ -1,4 +1,5 @@
 package wqchat.logic;
+
 import wqchat.task.Task;
 import wqchat.Ui;
 import wqchat.Storage;
@@ -22,28 +23,8 @@ public class Wqchat {
         parser = new Parser();
         taskList = new TaskList();
     }
-
-    public static class NoTaskException extends Exception {
-
-    }
-
     private static final ArrayList<Task> tasks = new ArrayList<>();
-
-    private static void handleInvalidIndexError() {
-        if (taskCount == 1) {
-            System.out.println("You only have 1 task!");
-        } else {
-            System.out.println("You only have " + taskCount + " tasks!");
-        }
-    }
-
-
-    //exception classes
-
-
     protected static int taskCount = 0;
-
-
 
     public void run() {
         ui.printGreetings();
@@ -58,7 +39,7 @@ public class Wqchat {
             if (line.equals("list")) {
                 try {
                     ui.printList(taskCount, tasks);
-                } catch (NoTaskException e) {
+                } catch (WqchatException.NoTaskException e) {
                     System.out.println("Good job! There is no pending tasks");
                 }
             } else if (line.startsWith("mark")) {
@@ -67,9 +48,9 @@ public class Wqchat {
                 try {
                     taskList.markTaskAsDone(index, taskCount, tasks, ui);
                 } catch (WqchatException.InvalidIndexException e) {
-                    handleInvalidIndexError();
+                    WqchatException.handleInvalidIndexError(taskCount);
                 } catch (WqchatException.NegativeIndexException e) {
-                    System.out.println("Positive number please.");
+                    ui.printNegativeIndexException();
                 }
 
             } else if (line.startsWith("unmark")) {
@@ -78,9 +59,9 @@ public class Wqchat {
                 try {
                     taskList.markTaskAsUndone(index, taskCount, tasks, ui);
                 } catch (WqchatException.InvalidIndexException e) {
-                    handleInvalidIndexError();
+                    WqchatException.handleInvalidIndexError(taskCount);
                 } catch (WqchatException.NegativeIndexException e) {
-                    System.out.println("I want a positive number!");
+                    ui.printNegativeIndexException();
                 }
 
             } else if (line.startsWith("todo")) {
@@ -99,11 +80,9 @@ public class Wqchat {
                     ui.printAddedTask(tasks, taskCount);
                     taskCount++;
                 } catch (WqchatException.MissingDueTimeException e) {
-                    System.out.println("When is it due?");
-                    System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
+                    ui.printMissingDueTimeException(tasks, taskCount);
                 } catch (WqchatException.MissingDescriptionException e) {
-                    System.out.println("Missing task description.");
-                    System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
+                    ui.printMissingDescriptionException(tasks, taskCount);
                 }
             } else if (line.startsWith("event")) {
                 try {
@@ -112,11 +91,9 @@ public class Wqchat {
                     ui.printAddedTask(tasks, taskCount);
                     taskCount++;
                 } catch (WqchatException.MissingDueTimeException e) {
-                    System.out.println("The time of the event is not complete");
-                    System.out.println("Tell me more information in the format of: event [task] /from [time] /to [time]");
+                    ui.printMissingDueTimeException(tasks, taskCount);
                 } catch (WqchatException.MissingDescriptionException e) {
-                    System.out.println("Missing task description.");
-                    System.out.println("Tell me more information in the format of: event [task] /from [time] /to [time]");
+                    ui.printMissingDescriptionException(tasks, taskCount);
                 }
             } else if (line.startsWith("delete")) {
                 String[] words = line.split(" ");
@@ -128,6 +105,10 @@ public class Wqchat {
                 }
                 taskList.deleteTask(index, ui, tasks, taskCount);
                 taskCount--;
+            } else if (line.startsWith("find")) {
+                ui.printLine();
+                taskList.findTask(tasks, line);
+                ui.printLine();
             } else {
                 System.out.println("Sorry I don't understand :(");
             }

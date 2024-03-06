@@ -37,11 +37,11 @@ public class Ui {
         printLine();
     }
 
-    public void printList(int taskCount, ArrayList<Task> tasks) throws Wqchat.NoTaskException {
+    public void printList(int taskCount, ArrayList<Task> tasks) throws WqchatException.NoTaskException {
         printLine();
 
         if (taskCount == 0) {
-            throw new Wqchat.NoTaskException();
+            throw new WqchatException.NoTaskException();
         }
         System.out.println("Here are the tasks in your list: ");
         for (int i = 0; i < taskCount; i++) {
@@ -50,5 +50,44 @@ public class Ui {
             System.out.println(tasks.get(i).toString());
         }
         printLine();
+    }
+
+    public void printNegativeIndexException() {
+        System.out.println("I want a positive number! :(");
+    }
+
+    public void printMissingDueTimeException(ArrayList<Task> tasks, int taskCount) {
+        String type = tasks.get(taskCount - 1).getType();
+
+        switch (type) {
+        case "D":
+            System.out.println("When is it due?");
+            System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
+            break;
+        case "E":
+            System.out.println("The time of the event is not complete");
+            System.out.println("Tell me more information in the format of: event [task] /from [time] /to [time]");
+        }
+    }
+
+    public void printMissingDescriptionException(ArrayList<Task> tasks, int taskCount) {
+        System.out.println("Missing task description.");
+        String type = tasks.get(taskCount - 1).getType();
+
+        switch (type) {
+        case "T":
+            System.out.println("Tell me more information in the format of: todo [task]");
+            break;
+        case "D":
+            System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
+            break;
+        case "E":
+            System.out.println("Tell me more information in the format of: event [task] /from [time] /to [time]");
+        }
+
+
+
+
+
     }
 }
