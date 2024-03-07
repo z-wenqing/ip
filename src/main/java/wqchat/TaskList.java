@@ -2,9 +2,20 @@ package wqchat;
 import wqchat.task.Task;
 import java.util.ArrayList;
 
+/**
+ * Represents a task list that contains the task list and has operations to add/modify tasks in the list.
+ */
 public class TaskList {
     private static final int WORDS_TO_FIND_INDEX = 5;
 
+    /**
+     * Checks whether the inputted index is valid.
+     *
+     * @param index index of task to be checked.
+     * @param taskCount number of tasks added.
+     * @throws WqchatException.InvalidIndexException If index is out of bound.
+     * @throws WqchatException.NegativeIndexException If index < 0.
+     */
     public void checkIndex(int index, int taskCount) throws WqchatException.InvalidIndexException, WqchatException.NegativeIndexException {
         if (index + 1 > taskCount) {
             throw new WqchatException.InvalidIndexException();
@@ -15,7 +26,7 @@ public class TaskList {
     }
 
     /**
-     * Deletes task with a specific index from tasks
+     * Deletes a task from the list of tasks
      *
      * @param index index of task to be deleted.
      * @param tasks a list of tasks added.
@@ -57,6 +68,7 @@ public class TaskList {
 
     /**
      * Marks the selected task as not done.
+     *
      * @param index index of task to be marked as not done.
      * @param taskCount number of tasks added.
      * @param tasks a list of tasks added.
@@ -77,6 +89,7 @@ public class TaskList {
 
     /**
      * Finds tasks that contains a certain keyword.
+     *
      * @param tasks a list of tasks added.
      * @param line user input.
      */

@@ -1,4 +1,8 @@
 package wqchat.task;
+
+/**
+ * Represents a deadline task that has description, due time and whether it is done
+ */
 public class Deadline extends Task {
     protected String by;
     public Deadline(String description, String by, Boolean isDone) {

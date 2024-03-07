@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Represents a storage manager that deals with loading tasks from the file and saving tasks in the file.
+ */
 public class Storage {
     public static String filePath;
     private static final int TYPE_INDEX_IN_FILE = 0;
@@ -53,7 +56,7 @@ public class Storage {
      * Processes text in data file and extracts task information including description, from, to and by
      *
      * @param line user input.
-     * @return a task from the data file at the current lie
+     * @return a task object represented by the current line in the data file
      */
     public Task extractTaskInfo(String line) {
         String[] words = line.split("\\|");
@@ -91,7 +94,7 @@ public class Storage {
     /**
      * Writes the text to data file
      *
-     * @param filePath a relative path giving the location of the data file, relative to the current folder.
+     * @param filePath a relative path giving the location of the data file, relative to the current working directory.
      * @param textToAdd text to write to the file.
      * @param isAppend whether to append the text or overwrite the whole file.
      * @throws IOException If there is something wrong.
@@ -101,9 +104,25 @@ public class Storage {
         fw.write(textToAdd);
         fw.close();
     }
+
+    /**
+     * Gets the format of the todo task in the file
+     *
+     * @param tasks a list of tasks added.
+     * @param index index of the task to be formatted.
+     * @return a string that represent the task
+     */
     public static String getTodo(ArrayList<Task> tasks, int index) {
         return tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription();
     }
+
+    /**
+     * Gets the format of the deadline task in the file
+     *
+     * @param tasks a list of tasks added.
+     * @param index index of the task to be formatted.
+     * @return a string that represent the task
+     */
 
     public static String getDeadline(ArrayList<Task> tasks, int index) {
         Deadline d = (Deadline) tasks.get(index);
@@ -111,11 +130,25 @@ public class Storage {
                 + " | " + "by " + d.getBy();
     }
 
+    /**
+     * Gets the format of the event task in the file
+     *
+     * @param tasks a list of tasks added.
+     * @param index index of the task to be formatted.
+     * @return a string that represent the task
+     */
     public static String getEvent(ArrayList<Task> tasks, int index) {
         Event e = (Event) tasks.get(index);
         return tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
                 + " | " + e.getFrom() + " - " + e.getTo();
     }
+
+    /**
+     * Writes the task in the file
+     *
+     * @param index index of the task to be added.
+     * @param tasks a list of tasks added.
+     */
     public void addTaskInFile(int index, ArrayList<Task> tasks) {
         try {
             String type = tasks.get(index).getType();
@@ -163,6 +196,14 @@ public class Storage {
         }
     }
 
+    /**
+     *  Updates the status of the task after marking / unmarking a task
+     *
+     * @param index index of the task to be updated.
+     * @param tasks a list of tasks added.
+     * @param taskCount number of tasks added.
+     * @throws IOException If there is something wrong.
+     */
     public static void updateTaskStatusInFile(int index, ArrayList<Task> tasks, int taskCount) throws IOException {
         File f = new File(filePath);
         Scanner s = new Scanner(f);

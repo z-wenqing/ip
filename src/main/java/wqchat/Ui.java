@@ -3,6 +3,9 @@ package wqchat;
 import wqchat.task.Task;
 import java.util.ArrayList;
 
+/**
+ * Represents UI that  deals with interactions with the user.
+ */
 public class Ui {
     public Ui() {
     }
@@ -39,6 +42,9 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Prints greetings when the user opens the chat bot.
+     */
     public void printGreetings() {
         printLine();
         System.out.println("Hello! I'm Wqchat");
@@ -68,12 +74,15 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Prints error message when a negative number is inputted,
+     */
     public void printNegativeIndexException() {
         System.out.println("I want a positive number! :(");
     }
 
     /**
-     * Prints error message when time is missing.
+     * Prints error message when information of the task is missing.
      *
      * @param line user input.
      */
@@ -98,7 +107,5 @@ public class Ui {
         case "T":
             System.out.println("Tell me more information in the format of: todo [TASK_DESCRIPTION]");
         }
-
-
     }
 }

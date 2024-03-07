@@ -1,4 +1,8 @@
 package wqchat.task;
+
+/**
+ * Represents an event task that has description, starting time, end time and whether its is done.
+ */
 public class Event extends Task {
     protected String from;
     protected String to;

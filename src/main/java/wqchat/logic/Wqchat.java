@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+/**
+ * Represents a chat bot that is able to add the tasks inputted by the user.
+ * It corresponds to a relative path of data file where all the tasks data are stored.
+ */
 public class Wqchat {
     private final Ui ui;
     private final Storage storage;

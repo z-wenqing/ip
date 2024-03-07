@@ -7,6 +7,9 @@ import wqchat.task.Todo;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a parser that deals with making sense of the user command.
+ */
 public class Parser {
     private static final int DEADLINE_DESCRIPTION_INDEX = 9;
     private static final int DEADLINE_BY_INDEX_INCREMENT = 4;
@@ -60,7 +63,7 @@ public class Parser {
      * @param line user input.
      * @param tasks a list of tasks added.
      * @param taskCount number of tasks added.
-     * @throws WqchatException.MissingInformationException If "/from" or "/to" is not found.
+     * @throws WqchatException.MissingInformationException If "/from", "/to" or description of event is not found.
      */
     public void addEvent(String line, ArrayList<Task> tasks, int taskCount) throws WqchatException.MissingInformationException {
         int indexOfFrom = line.indexOf("/from");
