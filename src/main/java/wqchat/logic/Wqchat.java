@@ -26,7 +26,7 @@ public class Wqchat {
     private static final ArrayList<Task> tasks = new ArrayList<>();
     protected static int taskCount = 0;
 
-    public void run() throws WqchatException.InvalidIndexException {
+    public void run() {
         ui.printGreetings();
         storage.loadData(tasks);
         taskCount = tasks.size();
@@ -126,7 +126,7 @@ public class Wqchat {
         System.out.println("Bye. Hope to see you again soon!");
         ui.printLine();
     }
-    public static void main(String[] args) throws WqchatException.InvalidIndexException {
+    public static void main(String[] args) {
         new Wqchat("tasks.txt").run();
     }
 }

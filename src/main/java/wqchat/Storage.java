@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static java.util.Objects.checkIndex;
-
 public class Storage {
     public static String filePath;
     private static final int TYPE_INDEX_IN_FILE = 0;

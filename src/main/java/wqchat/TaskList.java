@@ -87,7 +87,7 @@ public class TaskList {
         for (int i = 0; i < tasks.size(); i++) {
             if (tasks.get(i).getDescription().contains(wordToFind)) {
                 isFound = true;
-                System.out.println((i + 1) + "." + tasks.get(i).getStatusIcon() + tasks.get(i).toString());
+                System.out.println((i + 1) + "." + tasks.get(i).toString());
             }
         }
         if (!isFound) {
