@@ -101,36 +101,36 @@ public class Storage {
         fw.write(textToAdd);
         fw.close();
     }
-    public String getTodo(ArrayList<Task> tasks, int index) {
-        return tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription() + System.lineSeparator();
+    public static String getTodo(ArrayList<Task> tasks, int index) {
+        return tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription();
     }
 
-    public String getDeadline(ArrayList<Task> tasks, int index) {
+    public static String getDeadline(ArrayList<Task> tasks, int index) {
         Deadline d = (Deadline) tasks.get(index);
         return tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
-                + " | " + "by " + d.getBy() + System.lineSeparator();
+                + " | " + "by " + d.getBy();
     }
 
-    public String getEvent(ArrayList<Task> tasks, int index) {
+    public static String getEvent(ArrayList<Task> tasks, int index) {
         Event e = (Event) tasks.get(index);
         return tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
-                + " | " + e.getFrom() + " - " + e.getTo() + System.lineSeparator();
+                + " | " + e.getFrom() + " - " + e.getTo();
     }
     public void addTaskInFile(int index, ArrayList<Task> tasks) {
         try {
             String type = tasks.get(index).getType();
             switch (type) {
             case "T": {
-                writeToFile(filePath, getTodo(tasks, index), true);
+                writeToFile(filePath, getTodo(tasks, index) + System.lineSeparator(), true);
                 break;
             }
             case "D": {
-                writeToFile(filePath, getDeadline(tasks, index), true);
+                writeToFile(filePath, getDeadline(tasks, index) + System.lineSeparator(), true);
                 break;
             }
             case "E": {
 
-                writeToFile(filePath, getEvent(tasks, index), true);
+                writeToFile(filePath, getEvent(tasks, index) + System.lineSeparator(), true);
                 break;
             }
             }
@@ -162,7 +162,20 @@ public class Storage {
         Scanner s = new Scanner(f);
 
         List<String> lines = Files.readAllLines(Path.of(filePath));
-        String newText = tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription() + System.lineSeparator();
+
+        String type = tasks.get(index).getType();
+        String newText = "";
+        switch (type) {
+        case "T":
+            newText = getTodo(tasks, index);
+            break;
+        case "D":
+            newText = getDeadline(tasks, index);
+            break;
+        case "E":
+            newText = getEvent(tasks, index);
+            break;
+        }
         lines.set(index, newText);
 
         for (int i = 0; i < taskCount; i++) {
