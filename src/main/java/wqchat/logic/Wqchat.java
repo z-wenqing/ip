@@ -26,7 +26,7 @@ public class Wqchat {
     private static final ArrayList<Task> tasks = new ArrayList<>();
     protected static int taskCount = 0;
 
-    public void run() {
+    public void run() throws WqchatException.InvalidIndexException {
         ui.printGreetings();
         storage.loadData(tasks);
         taskCount = tasks.size();
@@ -77,7 +77,7 @@ public class Wqchat {
                     ui.printAddedTask(tasks, taskCount);
                     taskCount++;
                 } catch (StringIndexOutOfBoundsException e){
-                    System.out.println("You never say what you want to do...");
+                    ui.printMissingInformationException(line);
                 }
             } else if (line.startsWith("deadline")) {
                 try {
@@ -102,13 +102,16 @@ public class Wqchat {
                 int index = Integer.parseInt(words[1]) - 1;
                 try {
                     storage.deleteTaskInFile(index, taskCount);
-                } catch (IOException e) {
-                    System.out.println("Something went wrong...");
+                    ui.printLine();
+                    taskList.deleteTask(index, tasks, taskCount);
+                    ui.printLine();
+                    taskCount--;
+                } catch (WqchatException.NegativeIndexException e) {
+                    ui.printNegativeIndexException();
+                } catch (WqchatException.InvalidIndexException | IOException e) {
+                    WqchatException.handleInvalidIndexError(taskCount);
                 }
-                ui.printLine();
-                taskList.deleteTask(index, tasks, taskCount);
-                ui.printLine();
-                taskCount--;
+
             } else if (line.startsWith("find")) {
                 ui.printLine();
                 taskList.findTask(tasks, line);
@@ -123,7 +126,7 @@ public class Wqchat {
         System.out.println("Bye. Hope to see you again soon!");
         ui.printLine();
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws WqchatException.InvalidIndexException {
         new Wqchat("tasks.txt").run();
     }
 }

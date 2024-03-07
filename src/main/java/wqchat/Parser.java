@@ -72,7 +72,7 @@ public class Parser {
             throw new WqchatException.MissingInformationException();
         }
 
-        String description = line.substring(EVENT_DESCRIPTION_INDEX, line.indexOf("/from"));
+        String description = line.substring(EVENT_DESCRIPTION_INDEX, line.indexOf("/from")).trim();
         if (description.isEmpty()) {
             throw new WqchatException.MissingInformationException();
         }

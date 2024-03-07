@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static java.util.Objects.checkIndex;
+
 public class Storage {
     public static String filePath;
     private static final int TYPE_INDEX_IN_FILE = 0;
@@ -146,7 +148,13 @@ public class Storage {
      * @param taskCount number of tasks added.
      * @throws IOException If there is something wrong.
      */
-    public void deleteTaskInFile(int index, int taskCount) throws IOException {
+    public void deleteTaskInFile(int index, int taskCount) throws IOException, WqchatException.InvalidIndexException, WqchatException.NegativeIndexException {
+        if (index + 1 > taskCount) {
+            throw new WqchatException.InvalidIndexException();
+        }
+        if (index < 0) {
+            throw new WqchatException.NegativeIndexException();
+        }
         File f = new File(filePath);
         Scanner s = new Scanner(f);
 

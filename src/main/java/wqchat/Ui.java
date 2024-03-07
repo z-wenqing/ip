@@ -90,13 +90,13 @@ public class Ui {
         System.out.println("Incomplete command :(");
         switch (type) {
         case "D":
-            System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
+            System.out.println("Tell me more information in the format of: deadline [TASK_DESCRIPTION] /by [TIME]");
             break;
         case "E":
-            System.out.println("Tell me more information in the format of: event [task] /from [time] /to [time]");
+            System.out.println("Tell me more information in the format of: event [TASK_DESCRIPTION] /from [TIME] /to [TIME]");
             break;
         case "T":
-            System.out.println("Tell me more information in the format of: todo [task]");
+            System.out.println("Tell me more information in the format of: todo [TASK_DESCRIPTION]");
         }
 
 

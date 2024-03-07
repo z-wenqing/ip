@@ -5,6 +5,15 @@ import java.util.ArrayList;
 public class TaskList {
     private static final int WORDS_TO_FIND_INDEX = 5;
 
+    public void checkIndex(int index, int taskCount) throws WqchatException.InvalidIndexException, WqchatException.NegativeIndexException {
+        if (index + 1 > taskCount) {
+            throw new WqchatException.InvalidIndexException();
+        }
+        if (index < 0) {
+            throw new WqchatException.NegativeIndexException();
+        }
+    }
+
     /**
      * Deletes task with a specific index from tasks
      *
@@ -12,14 +21,15 @@ public class TaskList {
      * @param tasks a list of tasks added.
      * @param taskCount number of tasks added.
      */
-    public void deleteTask(int index, ArrayList<Task> tasks, int taskCount) {
+    public void deleteTask(int index, ArrayList<Task> tasks, int taskCount) throws WqchatException.InvalidIndexException, WqchatException.NegativeIndexException {
+        checkIndex(index, taskCount);
 
         System.out.println("Noted. I've removed this task:");
         System.out.println(tasks.get(index));
         if (taskCount == 1) {
             System.out.println("Now you have 1 task in the list.");
         } else {
-            System.out.println("Now you have " + taskCount + " tasks in the list.");
+            System.out.println("Now you have " + (taskCount - 1) + " tasks in the list.");
         }
         tasks.remove(index);
     }
@@ -35,12 +45,7 @@ public class TaskList {
      * @throws WqchatException.NegativeIndexException If index is < 0.
      */
     public void markTaskAsDone(int index, int taskCount, ArrayList<Task> tasks, Ui ui) throws WqchatException.InvalidIndexException, WqchatException.NegativeIndexException {
-        if (index + 1 > taskCount) {
-            throw new WqchatException.InvalidIndexException();
-        }
-        if (index < 0) {
-            throw new WqchatException.NegativeIndexException();
-        }
+        checkIndex(index, taskCount);
         tasks.get(index).markAsDone();
 
         ui.printLine();
@@ -60,12 +65,7 @@ public class TaskList {
      * @throws WqchatException.NegativeIndexException If index is < 0.
      */
     public void markTaskAsUndone(int index, int taskCount, ArrayList<Task> tasks, Ui ui) throws WqchatException.InvalidIndexException, WqchatException.NegativeIndexException {
-        if (index + 1 > taskCount) {
-            throw new WqchatException.InvalidIndexException();
-        }
-        if (index < 0) {
-            throw new WqchatException.NegativeIndexException();
-        }
+        checkIndex(index, taskCount);
         tasks.get(index).markAsNotDone();
 
         ui.printLine();
