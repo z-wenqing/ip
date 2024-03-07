@@ -2,11 +2,8 @@ package wqchat.task;
 public class Todo extends Task {
     public Todo(String description, boolean isDone) {
         super(description);
+        this.isDone = isDone;
     }
-    public void setDone(boolean done) {
-        isDone = done;
-    }
-
     public String getType() {
         return "T";
     }
@@ -14,4 +11,6 @@ public class Todo extends Task {
     public String toString() {
         return "[T]" + super.toString();
     }
+
+
 }

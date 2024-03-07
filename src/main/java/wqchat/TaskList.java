@@ -30,7 +30,7 @@ public class TaskList {
      * @param index index of task to be marked as done.
      * @param taskCount number of tasks added.
      * @param tasks a list of tasks added.
-     * @param ui a Ui object that manages UI.
+     * @param ui an Ui object that manages UI.
      * @throws WqchatException.InvalidIndexException If index is out of bound.
      * @throws WqchatException.NegativeIndexException If index is < 0.
      */
@@ -55,7 +55,7 @@ public class TaskList {
      * @param index index of task to be marked as not done.
      * @param taskCount number of tasks added.
      * @param tasks a list of tasks added.
-     * @param ui a Ui object that manages UI.
+     * @param ui an Ui object that manages UI.
      * @throws WqchatException.InvalidIndexException If index is out of bound.
      * @throws WqchatException.NegativeIndexException If index is < 0.
      */
@@ -63,7 +63,7 @@ public class TaskList {
         if (index + 1 > taskCount) {
             throw new WqchatException.InvalidIndexException();
         }
-        if (index <= 0) {
+        if (index < 0) {
             throw new WqchatException.NegativeIndexException();
         }
         tasks.get(index).markAsNotDone();

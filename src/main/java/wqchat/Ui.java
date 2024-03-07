@@ -1,8 +1,6 @@
 package wqchat;
 
-import wqchat.logic.Wqchat;
 import wqchat.task.Task;
-
 import java.util.ArrayList;
 
 public class Ui {
@@ -77,41 +75,30 @@ public class Ui {
     /**
      * Prints error message when time is missing.
      *
-     * @param tasks a list of tasks added.
-     * @param taskCount number of tasks added.
+     * @param line user input.
      */
-    public void printMissingDueTimeException(ArrayList<Task> tasks, int taskCount) {
-        String type = tasks.get(taskCount - 1).getType();
+    public void printMissingInformationException(String line) {
+        String type = "";
+        if (line.startsWith("deadline")) {
+            type = "D";
+        } else if (line.startsWith("event")) {
+            type = "E";
+        } else if (line.startsWith("todo")) {
+            type = "T";
+        }
 
+        System.out.println("Incomplete command :(");
         switch (type) {
         case "D":
-            System.out.println("When is it due?");
             System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
             break;
         case "E":
-            System.out.println("The time of the event is not complete");
             System.out.println("Tell me more information in the format of: event [task] /from [time] /to [time]");
-        }
-    }
-
-    /**
-     * Prints error message when task description is missing.
-     * @param tasks a list of tasks added.
-     * @param taskCount number of tasks added.
-     */
-    public void printMissingDescriptionException(ArrayList<Task> tasks, int taskCount) {
-        System.out.println("Missing task description.");
-        String type = tasks.get(taskCount - 1).getType();
-
-        switch (type) {
+            break;
         case "T":
             System.out.println("Tell me more information in the format of: todo [task]");
-            break;
-        case "D":
-            System.out.println("Tell me more information in the format of: deadline [task] /by [time]");
-            break;
-        case "E":
-            System.out.println("Tell me more information in the format of: event [task] /from [time] /to [time]");
         }
+
+
     }
 }

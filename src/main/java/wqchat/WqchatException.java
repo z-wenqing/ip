@@ -7,13 +7,9 @@ public class WqchatException {
     public static class NegativeIndexException extends Exception {
 
     }
-    public static class MissingDueTimeException extends Exception {
+    public static class MissingInformationException extends Exception {
 
     }
-    public static class MissingDescriptionException extends Exception {
-
-    }
-
     public static class NoTaskException extends Exception {
 
     }

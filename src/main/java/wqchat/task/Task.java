@@ -5,7 +5,6 @@ public abstract class Task {
 
     public Task(String description) {
         this.description = description;
-        this.isDone = false;
     }
 
     public String getStatusIcon() {
@@ -27,7 +26,6 @@ public abstract class Task {
         return isDone ? 1 : 0;
     }
     public abstract String getType();
-
     @Override
     public String toString() {
         return "[" + getStatusIcon() + "] " + getDescription();

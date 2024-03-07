@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Storage {
-    public String filePath;
+    public static String filePath;
     private static final int TYPE_INDEX_IN_FILE = 0;
     private static final int IS_DONE_INDEX_IN_FILE = 1;
     private static final int DESCRIPTION_INDEX_IN_FILE = 2;
@@ -23,7 +23,7 @@ public class Storage {
     private static final int DEADLINE_BY_INDEX_INCREMENT = 3;
 
     public Storage(String filePath) {
-        this.filePath = filePath;
+        Storage.filePath = filePath;
     }
 
     /**
@@ -74,14 +74,14 @@ public class Storage {
         }
         case "D": {
             String by = time.substring(DEADLINE_BY_INDEX_INCREMENT).trim();
-            t = new Deadline(description, by);
+            t = new Deadline(description, by, isDone);
             break;
         }
         case "E": {
             int indexOfTo = time.indexOf("-");
             String from = time.substring(0, indexOfTo).trim();
             String to = time.substring(indexOfTo + 1).trim();
-            t = new Event(description, from, to);
+            t = new Event(description, from, to, isDone);
             break;
         }
         }
@@ -101,24 +101,36 @@ public class Storage {
         fw.write(textToAdd);
         fw.close();
     }
+    public String getTodo(ArrayList<Task> tasks, int index) {
+        return tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription() + System.lineSeparator();
+    }
+
+    public String getDeadline(ArrayList<Task> tasks, int index) {
+        Deadline d = (Deadline) tasks.get(index);
+        return tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
+                + " | " + "by " + d.getBy() + System.lineSeparator();
+    }
+
+    public String getEvent(ArrayList<Task> tasks, int index) {
+        Event e = (Event) tasks.get(index);
+        return tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
+                + " | " + e.getFrom() + " - " + e.getTo() + System.lineSeparator();
+    }
     public void addTaskInFile(int index, ArrayList<Task> tasks) {
         try {
             String type = tasks.get(index).getType();
             switch (type) {
             case "T": {
-                writeToFile(filePath, tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription() + System.lineSeparator(), true);
+                writeToFile(filePath, getTodo(tasks, index), true);
                 break;
             }
             case "D": {
-                Deadline d = (Deadline) tasks.get(index);
-                writeToFile(filePath, tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
-                        + " | " + "by " + d.getBy() + System.lineSeparator(), true);
+                writeToFile(filePath, getDeadline(tasks, index), true);
                 break;
             }
             case "E": {
-                Event e = (Event) tasks.get(index);
-                writeToFile(filePath, tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription()
-                        + " | " + e.getFrom() + " - " + e.getTo() + System.lineSeparator(), true);
+
+                writeToFile(filePath, getEvent(tasks, index), true);
                 break;
             }
             }
@@ -143,6 +155,18 @@ public class Storage {
         for (int i = 0; i < taskCount - 1; i++) {
             writeToFile(filePath, lines.get(i) + System.lineSeparator(), i != 0);
         }
+    }
 
+    public static void updateTaskStatusInFile(int index, ArrayList<Task> tasks, int taskCount) throws IOException {
+        File f = new File(filePath);
+        Scanner s = new Scanner(f);
+
+        List<String> lines = Files.readAllLines(Path.of(filePath));
+        String newText = tasks.get(index).getType() + " | " + tasks.get(index).getIsDone() + " | " + tasks.get(index).getDescription() + System.lineSeparator();
+        lines.set(index, newText);
+
+        for (int i = 0; i < taskCount; i++) {
+            writeToFile(filePath, lines.get(i) + System.lineSeparator(), i != 0);
+        }
     }
 }

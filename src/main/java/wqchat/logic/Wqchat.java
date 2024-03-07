@@ -47,10 +47,13 @@ public class Wqchat {
                 int index = Integer.parseInt(words[1]) - 1;
                 try {
                     taskList.markTaskAsDone(index, taskCount, tasks, ui);
+                    Storage.updateTaskStatusInFile(index, tasks, taskCount);
                 } catch (WqchatException.InvalidIndexException e) {
                     WqchatException.handleInvalidIndexError(taskCount);
                 } catch (WqchatException.NegativeIndexException e) {
                     ui.printNegativeIndexException();
+                } catch (IOException e) {
+                    System.out.println("Something went wrong...");
                 }
 
             } else if (line.startsWith("unmark")) {
@@ -58,10 +61,13 @@ public class Wqchat {
                 int index = Integer.parseInt(words[1]) - 1;
                 try {
                     taskList.markTaskAsUndone(index, taskCount, tasks, ui);
+                    Storage.updateTaskStatusInFile(index, tasks, taskCount);
                 } catch (WqchatException.InvalidIndexException e) {
                     WqchatException.handleInvalidIndexError(taskCount);
                 } catch (WqchatException.NegativeIndexException e) {
                     ui.printNegativeIndexException();
+                } catch (IOException e) {
+                    System.out.println("Something went wrong...");
                 }
 
             } else if (line.startsWith("todo")) {
@@ -79,10 +85,8 @@ public class Wqchat {
                     storage.addTaskInFile(taskCount, tasks);
                     ui.printAddedTask(tasks, taskCount);
                     taskCount++;
-                } catch (WqchatException.MissingDueTimeException e) {
-                    ui.printMissingDueTimeException(tasks, taskCount);
-                } catch (WqchatException.MissingDescriptionException e) {
-                    ui.printMissingDescriptionException(tasks, taskCount);
+                } catch (WqchatException.MissingInformationException e) {
+                    ui.printMissingInformationException(line);
                 }
             } else if (line.startsWith("event")) {
                 try {
@@ -90,10 +94,8 @@ public class Wqchat {
                     storage.addTaskInFile(taskCount, tasks);
                     ui.printAddedTask(tasks, taskCount);
                     taskCount++;
-                } catch (WqchatException.MissingDueTimeException e) {
-                    ui.printMissingDueTimeException(tasks, taskCount);
-                } catch (WqchatException.MissingDescriptionException e) {
-                    ui.printMissingDescriptionException(tasks, taskCount);
+                } catch (WqchatException.MissingInformationException e) {
+                    ui.printMissingInformationException(line);
                 }
             } else if (line.startsWith("delete")) {
                 String[] words = line.split(" ");
