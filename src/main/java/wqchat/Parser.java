@@ -80,8 +80,14 @@ public class Parser {
             throw new WqchatException.MissingInformationException();
         }
         String from = line.substring(indexOfFrom + Event_FROM_INDEX_INCREMENT, indexOfTo).trim(); // -1 to exclude the space
-        String to = line.substring(indexOfTo + EVENT_TO_INDEX_INCREMENT);
+        if (from.isEmpty()) {
+            throw new WqchatException.MissingInformationException();
+        }
 
+        String to = line.substring(indexOfTo + EVENT_TO_INDEX_INCREMENT);
+        if (to.isEmpty()) {
+            throw new WqchatException.MissingInformationException();
+        }
         tasks.add(taskCount, new Event(description, from, to, false));
     }
 }
