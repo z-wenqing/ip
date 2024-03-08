@@ -1,6 +1,6 @@
 # User Guide
 
-Wqchat is a chatbot that helps the user to keep track of various tasks, optimized for use via a Command Line Interface (CLI)
+Wqchat is a chatbot that helps the user to keep track of various tasks, optimized for use via a Command Line Interface (CLI).
 ## Features 
 
 ### View task list: list
@@ -37,7 +37,7 @@ Example: `event class /from 1pm /to 2pm`
 
 Mark a task as done.
 
-Format: `mark [index]`
+Format: `mark [INDEX]`
 
 Example: `mark 5`
 
